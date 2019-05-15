@@ -14,7 +14,9 @@ Compiler Features:
  * Inline Assembly: Revert change introduced in 0.5.7: The ``callvalue()`` instruction does not require ``payable`` anymore.
  * Metadata: Add IPFS hashes of source files.
  * Assembler: Encode the compiler version in the deployed bytecode.
+ * Optimizer: Add rules for multiplication and division by left-shifted one.
  * Yul Optimizer: Simplify single-run ``for`` loops to ``if`` statements.
+ * Yul Optimizer: Optimize representation of numbers.
  * Yul Optimizer: Do not inline recursive functions.
  * Optimizer: Add rules for multiplication and division by left-shifted one.
 
