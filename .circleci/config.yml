@@ -268,6 +268,7 @@ jobs:
           name: Regression tests
           command: |
             mkdir -p test_results
+            export ASAN_OPTIONS="check_initialization_order=true:detect_stack_use_after_return=true:strict_init_order=true:strict_string_checks=true:detect_invalid_pointer_pairs=2"
             scripts/regressions.py -o test_results
       - store_test_results: *store_test_results
       - store_artifacts: *artifacts_test_results
@@ -363,6 +364,7 @@ jobs:
     environment:
       CMAKE_OPTIONS: -DSANITIZE=address
       CMAKE_BUILD_TYPE: Debug
+      ASAN_OPTIONS: check_initialization_order=true:detect_stack_use_after_return=true:strict_init_order=true:strict_string_checks=true:detect_invalid_pointer_pairs=2
     steps:
       - checkout
       - run: *run_build
@@ -397,12 +399,16 @@ jobs:
 
   t_ubu_asan_cli:
     <<: *t_ubu_cli
+    environment:
+      TERM: xterm
+      ASAN_OPTIONS: check_initialization_order=true:detect_stack_use_after_return=true:strict_init_order=true:strict_string_checks=true:detect_invalid_pointer_pairs=2
 
   t_ubu_asan_constantinople:
     <<: *test_asan
     environment:
       EVM: constantinople
       OPTIMIZE: 0
+      ASAN_OPTIONS: check_initialization_order=true:detect_stack_use_after_return=true:strict_init_order=true:strict_string_checks=true:detect_invalid_pointer_pairs=2
 
   t_ubu_homestead:
     <<: *test_ubuntu1904
