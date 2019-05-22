@@ -19,6 +19,7 @@ Compiler Features:
 
 
 Bugfixes:
+ * Code Generator: Explicitly turn uninitialized internal function pointers into invalid functions when loaded from storage.
  * SMTChecker: Fix bad cast in base constructor modifier.
  * SMTChecker: Fix internal error when visiting state variable inherited from base class.
  * SMTChecker: Fix internal error in fixed point operations.
