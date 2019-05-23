@@ -379,18 +379,23 @@ bool IRGeneratorForStatements::visit(BinaryOperation const& _binOp)
 	{
 		if (IntegerType const* type = dynamic_cast<IntegerType const*>(commonType))
 		{
-			solUnimplementedAssert(!type->isSigned(), "");
 			string left = expressionAsType(_binOp.leftExpression(), *commonType);
 			string right = expressionAsType(_binOp.rightExpression(), *commonType);
 			string fun;
-			if (_binOp.getOperator() == Token::Add)
-				fun = m_utils.overflowCheckedUIntAddFunction(type->numBits());
-			else if (_binOp.getOperator() == Token::Sub)
-				fun = m_utils.overflowCheckedUIntSubFunction();
-			else if (_binOp.getOperator() == Token::Mul)
-				fun = m_utils.overflowCheckedUIntMulFunction(type->numBits());
-			else
-				solUnimplementedAssert(false, "");
+			if (!type->isSigned())
+			{
+				if (_binOp.getOperator() == Token::Add)
+					fun = m_utils.overflowCheckedUIntAddFunction(type->numBits());
+				else if (_binOp.getOperator() == Token::Sub)
+					fun = m_utils.overflowCheckedUIntSubFunction();
+				else if (_binOp.getOperator() == Token::Mul)
+					fun = m_utils.overflowCheckedUIntMulFunction(type->numBits());
+			}
+			if (_binOp.getOperator() == Token::Div)
+				fun = m_utils.overflowCheckedIntDivFunction(*type);
+
+			solUnimplementedAssert(!fun.empty(), "");
+
 			defineExpression(_binOp) << fun << "(" << left << ", " << right << ")\n";
 		}
 		else
