@@ -440,11 +440,11 @@ jobs:
 
   build_x86_linux_ossfuzz:
     docker:
-      - image: buildpack-deps:cosmic
+      - image: buildpack-deps:disco
     environment:
       TERM: xterm
-      CC: /usr/bin/clang-7
-      CXX: /usr/bin/clang++-7
+      CC: /usr/bin/clang-8
+      CXX: /usr/bin/clang++-8
       CMAKE_OPTIONS: -DOSSFUZZ=1 -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/libfuzzer.cmake
     steps:
       - checkout
@@ -452,11 +452,7 @@ jobs:
           name: Install build dependencies
           command: |
             apt-get -qq update
-            apt-get -qy install wget clang-7 libboost-regex-dev libboost-filesystem-dev libboost-test-dev libboost-system-dev libboost-program-options-dev libcvc4-dev libbz2-dev ninja-build zlib1g-dev libjsoncpp-dev=1.7.4-\*
-            # evmone requires cmake version >= 3.13
-            wget -O /tmp/install_cmake_3.14.4.sh https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4-Linux-x86_64.sh
-            chmod +x /tmp/install_cmake_3.14.4.sh
-            /tmp/install_cmake_3.14.4.sh --skip-license --prefix=/usr/local
+            apt-get -qy install wget clang-8 cmake libboost-regex-dev libboost-filesystem-dev libboost-test-dev libboost-system-dev libboost-program-options-dev libcvc4-dev libbz2-dev ninja-build zlib1g-dev libjsoncpp-dev=1.7.4-\*
             ./scripts/install_lpm.sh
             ./scripts/install_libfuzzer.sh
             # Install evmone and dependencies (intx and ethash)
@@ -467,7 +463,7 @@ jobs:
 
   test_x86_ossfuzz_regression:
     docker:
-      - image: buildpack-deps:cosmic
+      - image: buildpack-deps:disco
     environment:
       TERM: xterm
     steps:
@@ -478,9 +474,9 @@ jobs:
           name: Install dependencies
           command: |
             apt-get -qq update
-            apt-get -qy install libcvc4-dev llvm-7-dev
+            apt-get -qy install libcvc4-dev llvm-8-dev
             ./scripts/download_ossfuzz_corpus.sh
-            update-alternatives --install /usr/bin/llvm-symbolizer llvm-symbolizer /usr/bin/llvm-symbolizer-7 1
+            update-alternatives --install /usr/bin/llvm-symbolizer llvm-symbolizer /usr/bin/llvm-symbolizer-8 1
       - run: mkdir -p test_results
       - run: *run_regressions
       - store_artifacts:
