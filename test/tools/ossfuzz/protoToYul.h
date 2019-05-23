@@ -44,6 +44,8 @@ public:
 		m_numVarsPerScope.push(m_numLiveVars);
 		m_numFunctionSets = 0;
 		m_inForBodyScope.push(false);
+		m_inForInitScope.push(false);
+		m_inForPostScope.push(false);
 		m_numNestedForLoops = 0;
 	}
 	ProtoConverter(ProtoConverter const&) = delete;
@@ -150,6 +152,8 @@ private:
 	static unsigned constexpr modOutputParams = 5;
 	// Stack to keep track of for init/body/post blocks
 	std::stack<bool> m_inForBodyScope;
+	std::stack<bool> m_inForInitScope;
+	std::stack<bool> m_inForPostScope;
 	// Index used for naming loop variable of bounded for loops
 	unsigned m_numNestedForLoops;
 };

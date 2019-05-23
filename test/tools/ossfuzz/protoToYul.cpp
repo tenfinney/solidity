@@ -663,9 +663,13 @@ void ProtoConverter::visit(StoreFunc const& _x)
 void ProtoConverter::visit(ForStmt const& _x)
 {
 	m_output << "for ";
+	m_inForInitScope.push(true);
 	visit(_x.for_init());
+	m_inForInitScope.pop();
 	visit(_x.for_cond());
+	m_inForPostScope.push(true);
 	visit(_x.for_post());
+	m_inForPostScope.pop();
 	m_inForBodyScope.push(true);
 	visit(_x.for_body());
 	m_inForBodyScope.pop();
@@ -931,11 +935,11 @@ void ProtoConverter::visit(Statement const& _x)
 		visit(_x.switchstmt());
 		break;
 	case Statement::kBreakstmt:
-		if (m_inForBodyScope.top())
+		if (m_inForBodyScope.top() && !m_inForInitScope.top() && !m_inForPostScope.top())
 			m_output << "break\n";
 		break;
 	case Statement::kContstmt:
-		if (m_inForBodyScope.top())
+		if (m_inForBodyScope.top() && !m_inForInitScope.top() && !m_inForPostScope.top())
 			m_output << "continue\n";
 		break;
 	case Statement::kLogFunc:
